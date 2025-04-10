@@ -1,8 +1,8 @@
-name: "PHP Code Sniffer"
+name: "PHPStan"
 on: workflow_call
 jobs:
-  phpcs:
-    name: "PHP Code Sniffer"
+  phpstan:
+    name: "PHPStan"
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -17,5 +17,5 @@ jobs:
       - name: Install dependencies
         run: |
           composer update --no-interaction      
-      - name: PHP Code Sniffer
-        run: ./vendor/bin/phpcs -q --report=checkstyle --standard=./phpcs.xml src ${{ github.event_name == 'pull_request' && '| cs2pr' || '' }}
+      - name: PHPStan
+        run: ./vendor/bin/phpstan analyse --configuration=./phpstan.neon --error-format=checkstyle src | cs2pr
