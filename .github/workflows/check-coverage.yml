@@ -1,14 +1,17 @@
-name: "Merge coverage"
 on:
   workflow_call:
     inputs:
-      required-percentage:
+      threshold-low:
         type: number
         required: false
         default: 50
+      threshold-high:
+        type: number
+        required: false
+        default: 80
 jobs:
-  generate-coverage-report:
-    name: Generate coverage report
+  check-coverage:
+    name: Check coverage
     runs-on: ubuntu-latest
     steps:
       - name: Download artifacts
@@ -16,8 +19,13 @@ jobs:
         with:
           name: coverage
           path: coverage
+      - name: Generate coverage report
+        uses: sergiy-decima/clover-coverage-action@1.0.0
+        with:
+          filename: coverage/clover.xml
+          threshold: ${{ inputs.threshold-low }} ${{ inputs.threshold-high }}
       - name: Fail below threshold
         uses: themichaelhall/check-code-coverage@v2
         with:
           report: coverage/clover.xml
-          required-percentage: ${{ inputs.required-percentage }}
+          required-percentage: ${{ inputs.threshold-low }}
