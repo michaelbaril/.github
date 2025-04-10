@@ -19,13 +19,9 @@ jobs:
         with:
           name: coverage
           path: coverage
-      - name: Generate coverage report
+      - name: Show coverage report
         uses: sergiy-decima/clover-coverage-action@1.0.0
         with:
           filename: coverage/clover.xml
-          threshold: ${{ inputs.threshold-low }} ${{ inputs.threshold-high }}
-      - name: Fail below threshold
-        uses: themichaelhall/check-code-coverage@v2
-        with:
-          report: coverage/clover.xml
-          required-percentage: ${{ inputs.threshold-low }}
+          thresholds: ${{ inputs.threshold-low }} ${{ inputs.threshold-high }}
+          fail_if_low: true
